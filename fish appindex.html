@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Fishing Companion</title>
+    <style>
+        :root {
+            --primary: #2c7be5;
+            --secondary: #6c757d;
+            --success: #00d97e;
+            --danger: #e63757;
+            --light: #f8f9fa;
+            --dark: #12263f;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c7be5 0%, #1c5cb7 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        .tagline {
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        .search-container {
+            display: flex;
+            margin: 30px 0;
+            gap: 10px;
+        }
+        
+        #fishSearch {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        #fishSearch:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 123, 229, 0.25);
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: #1c5cb7;
+            transform: translateY(-2px);
+        }
+        
+        .fish-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .fish-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .fish-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .fish-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .fish-info {
+            padding: 20px;
+        }
+        
+        .fish-name {
+            font-size: 1.4rem;
+            margin: 0 0 10px;
+            color: var(--primary);
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            margin: 15px 0 5px;
+            color: var(--dark);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 5px;
+        }
+        
+        .lure-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .lure-item {
+            background-color: #e9f2ff;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .spot-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .spot-item {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .spot-item:before {
+            content: "📍";
+            margin-right: 8px;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .bait-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 10px;
+            border: 2px solid #ddd;
+        }
+        
+        .bait-container {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 0;
+            gap: 15px;
+        }
+        
+        .bait-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 80px;
+        }
+        
+        .bait-name {
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .fish-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Ultimate Fishing Companion</h1>
+            <p class="tagline">Your expert guide to catching more fish</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="fishSearch" placeholder="Search for a fish species (e.g., Bass, Trout, Salmon)">
+            <button onclick="searchFish()">Find Fishing Info</button>
+        </div>
+        
+        <div id="resultsContainer">
+            <div class="fish-grid">
+                <!-- Fish cards will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fishing data database
+        const fishDatabase = [
+            {
+                name: "Largemouth Bass",
+                image: "https://www.takemefishing.org/tmf/assets/images/fish/largemouth-bass-464x170.png",
+                description: "America's most popular game fish, known for their aggressive strikes and fighting spirit.",
+                baits: [
+                    { name: "Plastic Worm", image: "https://m.media-amazon.com/images/I/61V+BWQyWDL._AC_UF1000,1000_QL80_.jpg" },
+                    { name: "Spinnerbait", image: "https://www.basspro.com/shop/static/staticProductImages/1000/38/38773_300.jpg" },
+                    { name: "Crankbait", image: "https://www.basspro.com/shop/static/staticProductImages/1000/38/38773_300.jpg" },
+                    { name: "Topwater Frog", image: "https://www.tacklewarehouse.com/images/products/tw/BOOYAHBPFGLG.jpg" }
+                ],
+                lures: ["Jigs", "Swimbaits", "Chatterbaits", "Lipless Crankbaits"],
+                spots: ["Weed beds", "Docks and piers", "Submerged timber", "Points and drop-offs"],
+                video: "https://www.youtube.com/embed/vtW5R3eTo4c",
+                bestTime: "Early morning and late evening",
+                tips: "Bass often relate to structure. Target areas with cover and use techniques that match the season."
+            },
+            {
+                name: "Rainbow Trout",
+                image: "https://www.takemefishing.org/tmf/assets/images/fish/rainbow-trout-464x170.png",
+                description: "Popular cold-water species prized for their acrobatic fights and delicious flesh.",
+                baits: [
+                    { name: "PowerBait", image: "https://www.basspro.com/shop/static/staticProductImages/1000/38/38773_300.jpg" },
+                    { name: "Salmon Eggs", image: "https://www.basspro.com/shop/static/staticProductImages/1000/38/38773_300.jpg" },
+                    { name: "Spinners", image: "https://www.basspro.com/shop/static/staticProductImages/1000/38/38773_300.jpg" },
+                    { name: "Fly - Woolly Bugger", image: "https://www.basspro.com/shop/static/staticProductImages/1000/38/38773_300.jpg" }
+                ],
+                lures: ["Small Spoons", "Inline Spinners", "Nymph Flies", "Dry Flies"],
+                spots: ["Riffles and runs", "Deep pools", "Undercut banks", "Tailouts below riffles"],
+                video: "https://www.youtube.com/embed/9vdK9F3jU5w",
+                bestTime: "Early morning or cloudy days",
+                tips: "Trout have excellent vision. Use light line and natural presentations in clear water."
+            },
+            {
+                name: "Walleye",
+                image: "https://www.takemefishing.org/tmf/assets/images/fish/walleye-464x170.png",
+                description: "Prized for their excellent flavor and challenging nature to catch.",
+                baits: [
+                    { name: "Nightcrawler", image: "https://www.basspro.com/shop/static/staticProductImages/1000/38/38773_300.jpg" },
+                    { name: "Leeches", image: "https://www.basspro.com/shop/static/staticProductImages/1000/38/38773_300.jpg" },
+                    { name: "Minnows", image: "https://www.basspro.com/shop/static/staticProductImages/1000/38/38773_300.jpg" },
+                    { name: "Crankbait", image: "https://www.basspro.com/shop/static/staticProductImages/1000/38/38773_300.jpg" }
+                ],
+                lures: ["Jigging Spoons", "Blade Baits", "Live Bait Rigs", "Trolling Crankbaits"],
+                spots: ["Humps and points", "Windblown shorelines", "Deep weed edges", "River current breaks"],
+                video: "https://www.youtube.com/embed/6x6YakZ5L5A",
+                bestTime: "Low light conditions and night",
+                tips: "Walleye eyes are light-sensitive. Fish deeper during bright days and shallower at night."
+            },
+            {
+                name: "Northern Pike",
+                image: "https://www.takemefishing.org/tmf/assets/images/fish/northern-pike-464x170.png",
+                description: "Aggressive predators known for their explosive strikes and long runs.",
+                baits: [
+                    { name: "Large Spinnerbaits", image: "https://www.basspro.com/shop/static/staticProductImages/1000/38/38773_300.jpg" },
+                    { name: "Spoons", image: "https://www.basspro.com/shop/static/staticProductImages/1000/38/38773_300.jpg" },
+                    { name: "Live Baitfish", image: "https://www.basspro.com/shop/static/staticProductImages/1000/38/38773_300.jpg" },
+                    { name: "Glide Baits", image: "https://www.basspro.com/shop/static/staticProductImages/1000/38/38773_300.jpg" }
+                ],
+                lures: ["Bucktail Spinners", "Large Crankbaits", "Jerkbaits", "Topwater Lures"],
+                spots: ["Weed edges", "Shallow bays", "Drop-offs", "Submerged rock piles"],
+                video: "https://www.youtube.com/embed/7X8Ii6wR6n4",
+                bestTime: "Morning and evening",
+                tips: "Use wire leaders to prevent bite-offs. Pike often strike as a lure pauses."
+            }
+        ];
+
+        // Display all fish initially
+        displayFishCards(fishDatabase);
+
+        function searchFish() {
+            const searchTerm = document.getElementById('fishSearch').value.toLowerCase();
+            const filteredFish = fishDatabase.filter(fish => 
+                fish.name.toLowerCase().includes(searchTerm) ||
+                fish.lures.some(lure => lure.toLowerCase().includes(searchTerm)) ||
+                fish.spots.some(spot => spot.toLowerCase().includes(searchTerm))
+            );
+            
+            displayFishCards(filteredFish);
+        }
+
+        function displayFishCards(fishArray) {
+            const fishGrid = document.querySelector('.fish-grid');
+            fishGrid.innerHTML = '';
+            
+            if (fishArray.length === 0) {
+                fishGrid.innerHTML = '<p>No fish found matching your search. Try "Bass", "Trout", or "Pike".</p>';
+                return;
+            }
+            
+            fishArray.forEach(fish => {
+                const fishCard = document.createElement('div');
+                fishCard.className = 'fish-card';
+                
+                fishCard.innerHTML = `
+                    <img src="${fish.image}" alt="${fish.name}" class="fish-image">
+                    <div class="fish-info">
+                        <h3 class="fish-name">${fish.name}</h3>
+                        <p>${fish.description}</p>
+                        
+                        <h4 class="section-title">Best Baits</h4>
+                        <div class="bait-container">
+                            ${fish.baits.map(bait => `
+                                <div class="bait-item">
+                                    <img src="${bait.image}" alt="${bait.name}" class="bait-image">
+                                    <span class="bait-name">${bait.name}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <h4 class="section-title">Effective Lures</h4>
+                        <div class="lure-list">
+                            ${fish.lures.map(lure => `<span class="lure-item">${lure}</span>`).join('')}
+                        </div>
+                        
+                        <h4 class="section-title">Hot Spots</h4>
+                        <ul class="spot-list">
+                            ${fish.spots.map(spot => `<li class="spot-item">${spot}</li>`).join('')}
+                        </ul>
+                        
+                        <h4 class="section-title">Best Time to Fish</h4>
+                        <p>${fish.bestTime}</p>
+                        
+                        <h4 class="section-title">Pro Tips</h4>
+                        <p>${fish.tips}</p>
+                        
+                        <h4 class="section-title">Fishing Technique Video</h4>
+                        <div class="video-container">
+                            <iframe src="${fish.video}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                `;
+                
+                fishGrid.appendChild(fishCard);
+            });
+        }
+    </script>
+</body>
+</html>
